@@ -71,6 +71,18 @@ public class TripController {
 	 * Api Operation mendeskripsikan method HTTP dan memerlukan Authorization
 	 * Pre Authorize mengecek apakah user punya role ADMIN
 	 */
+	@GetMapping("/")
+	@PreAuthorize("hasRole('ADMIN')")
+	@ApiOperation(value = "", authorizations = { @Authorization(value = "apiKey") })
+	public ResponseEntity<?> getAllTrips() {
+		return ResponseEntity.ok(tripRepository.findAll());
+	}
+	
+	/*
+	 * Get Mapping shortcut baca data agar didefinisikan tambahan ./
+	 * Api Operation mendeskripsikan method HTTP dan memerlukan Authorization
+	 * Pre Authorize mengecek apakah user punya role ADMIN
+	 */
 	@GetMapping("/{id}")
 	@ApiOperation(value = "", authorizations = { @Authorization(value = "apiKey") })
 	@PreAuthorize("hasRole('ADMIN')")

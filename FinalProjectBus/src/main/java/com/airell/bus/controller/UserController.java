@@ -71,11 +71,11 @@ public class UserController {
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupCustomRequest signupCustomRequest) {
 		// Cek data apakah sudah ada pada database
 		if (userRepository.existsByUsername(signupCustomRequest.getUsername())) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: Username sudah digunakan!"));
 		}
 
 		if (userRepository.existsByEmail(signupCustomRequest.getEmail())) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: Email sudah digunakan!"));
 		}
 
 		// Buat akun user baru
@@ -88,19 +88,19 @@ public class UserController {
 
 		if (strRoles == null) {
 			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					.orElseThrow(() -> new RuntimeException("Error: Role tidak ditemukan."));
 			roles.add(userRole);
 		} else {
 			strRoles.forEach(role -> {
 				switch (role) {
 				case "admin":
 					Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+							.orElseThrow(() -> new RuntimeException("Error: Role tidak ditemukan."));
 					roles.add(adminRole);
 					break;
 				default:
 					Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+							.orElseThrow(() -> new RuntimeException("Error: Role tidak ditemukan."));
 					roles.add(userRole);
 				}
 			});
@@ -113,7 +113,7 @@ public class UserController {
 				signupCustomRequest.getName(), user);
 		agencyRepository.save(agency);
 
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		return ResponseEntity.ok(new MessageResponse("User berhasil didaftarkan!"));
 	}
 
 	/*

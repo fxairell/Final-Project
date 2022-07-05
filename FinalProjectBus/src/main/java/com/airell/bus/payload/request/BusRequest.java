@@ -27,7 +27,7 @@ public class BusRequest {
 	public BusRequest() {
 	}
 
-	public BusRequest(Long id, @NotNull int capacity, @NotBlank String code,
+	public BusRequest(Long id, @NotBlank String code, @NotNull int capacity,
 			@NotBlank String make, @NotBlank long agencyId) {
 		this.id = id;
 		this.capacity = capacity;

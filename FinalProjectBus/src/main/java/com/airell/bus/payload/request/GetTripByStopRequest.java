@@ -7,6 +7,14 @@ public class GetTripByStopRequest {
 	private Long sourceStopid;
 	private Long destStopId;
 
+	public GetTripByStopRequest() {
+	}
+
+	public GetTripByStopRequest(Long sourceStopid, Long destStopId) {
+		this.sourceStopid = sourceStopid;
+		this.destStopId = destStopId;
+	}
+	
 	public Long getSourceStopid() {
 		return sourceStopid;
 	}

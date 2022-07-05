@@ -60,7 +60,7 @@ public class AgencyController {
 					dataArr.getDetails(), dataArr.getOwner().getId()));
 		}
 		
-		return ResponseEntity.ok(new MessageResponse<AgencyRequest>(true, "Success Retrieving Data", dataArrResult));
+		return ResponseEntity.ok(new MessageResponse<AgencyRequest>(true, "Data berhasil dipindai", dataArrResult));
 	}
 	
 	/*
@@ -80,7 +80,7 @@ public class AgencyController {
 			AgencyRequest dataResult = new AgencyRequest(agency.getId(), agency.getCode(), agency.getName(),
 					agency.getDetails(), agency.getOwner().getId());
 			
-			return ResponseEntity.ok(new MessageResponse<AgencyRequest>(true, "Success Retrieving Data", dataResult));
+			return ResponseEntity.ok(new MessageResponse<AgencyRequest>(true, "Data berhasil dipindai", dataResult));
 		}
 	}
 
@@ -97,7 +97,7 @@ public class AgencyController {
 		Agency agency = new Agency(agencyRequest.getCode(), agencyRequest.getDetails(), agencyRequest.getName(), user);
 		
 		return ResponseEntity
-				.ok(new MessageResponse<Agency>(true, "Success Adding Data", agencyRepository.save(agency)));
+				.ok(new MessageResponse<Agency>(true, "Data berhasil ditambahkan", agencyRepository.save(agency)));
 	}
 
 	/*
@@ -124,7 +124,7 @@ public class AgencyController {
 
 		Agency updatedAgency = agencyRepository.save(agency);
 
-		return ResponseEntity.ok(new MessageResponse<Agency>(true, "Success Updating Data", updatedAgency));
+		return ResponseEntity.ok(new MessageResponse<Agency>(true, "Data berhasil diubah", updatedAgency));
 	}
 
 	/*
@@ -139,12 +139,12 @@ public class AgencyController {
 		String result = "";
 		try {
 			agencyRepository.findById(id).get();
-			result = "Success Deleting Data with Id: " + id;
+			result = "Data dengan ID: " + id + " berhasil dihapus";
 			agencyRepository.deleteById(id);
 
 			return ResponseEntity.ok(new MessageResponse<Agency>(true, result));
 		} catch (Exception e) {
-			result = "Data with Id: " + id + " Not Found";
+			result = "Data dengan ID: " + id + " tidak ditemukan";
 			
 			return ResponseEntity.ok(new MessageResponse<Agency>(false, result));
 		}

@@ -7,8 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.airell.bus.models.Stop;
-import com.airell.bus.repository.StopRepository;
+import com.airell.bus.models.Trip;
+import com.airell.bus.models.TripSchedule;
+import com.airell.bus.payload.request.GetTripScheduleRequest;
+import com.airell.bus.payload.response.MessageResponse;
+import com.airell.bus.repository.TicketRepository;
+import com.airell.bus.repository.TripRepository;
+import com.airell.bus.repository.TripScheduleRepository;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -17,18 +22,24 @@ import io.swagger.annotations.Authorization;
  * Cross Origin melarang penggunaan resource di luar penggunaan yang seharusnya
  * Rest Controller untuk membuat Restful Web Services
  * Request Mapping memuat mapping spesifik untuk web
- * Request di sini didefinisikan pada ./api/v1/stop
+ * Request di sini didefinisikan pada ./api/v1/trip_schedule
  */
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/v1/stop")
-public class StopController {
+@RequestMapping("/api/v1/trip_schedule")
+public class TripScheduleController {
 	/*
 	 * Dihubungkan untuk kontrolernya
-	 * Dihuhungkan dengan repository Stop
+	 * Dihuhungkan dengan repository Agency dan Bus
 	 */
 	@Autowired
-	StopRepository stopRepository;
+	TripScheduleRepository tripScheduleRepository;
+
+	@Autowired
+	TicketRepository ticketRepository;
+
+	@Autowired
+	TripRepository tripRepository;
 
 	/*
 	 * Get Mapping shortcut baca data agar didefinisikan tambahan ./
@@ -38,20 +49,8 @@ public class StopController {
 	@GetMapping("/")
 	@PreAuthorize("hasRole('ADMIN')")
 	@ApiOperation(value = "", authorizations = { @Authorization(value = "apiKey") })
-	public ResponseEntity<?> getAllStops() {
-		return ResponseEntity.ok(stopRepository.findAll());
-	}
-	
-	/*
-	 * Get Mapping shortcut baca data agar didefinisikan tambahan ./{id}
-	 * Api Operation mendeskripsikan method HTTP dan memerlukan Authorization
-	 * Pre Authorize mengecek apakah user punya role ADMIN
-	 */
-	@GetMapping("/{id}")
-	@ApiOperation(value = "", authorizations = { @Authorization(value = "apiKey") })
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> getStopById(@PathVariable(value = "id") Long id) {
-		return ResponseEntity.ok(stopRepository.findById(id));
+	public ResponseEntity<?> getAllTripSchedules() {
+		return ResponseEntity.ok(tripScheduleRepository.findAll());
 	}
 
 	/*
@@ -60,9 +59,13 @@ public class StopController {
 	 * Pre Authorize mengecek apakah user punya role ADMIN
 	 */
 	@PostMapping("/")
-	@PreAuthorize("hasRole('ADMIN')")
 	@ApiOperation(value = "", authorizations = { @Authorization(value = "apiKey") })
-	public ResponseEntity<?> addStop(@Valid @RequestBody Stop stop) {
-		return ResponseEntity.ok(stopRepository.save(stop));
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> addTripSchedule(@Valid @RequestBody GetTripScheduleRequest tripScheduleRequest) {
+		Trip trip = tripRepository.findById(tripScheduleRequest.getTrip_detail()).get();
+		TripSchedule trip_schedule = new TripSchedule(tripScheduleRequest.getTripDate(),
+				tripScheduleRequest.getAvailable_seats(), trip);
+		return ResponseEntity.ok(new MessageResponse<TripSchedule>(true, "Data berhasil ditambahkan.",
+				tripScheduleRepository.save(trip_schedule)));
 	}
 }
